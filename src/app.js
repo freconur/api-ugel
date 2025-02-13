@@ -1,11 +1,6 @@
 const express = require('express')
 const morgan = require('morgan')
-const db = require('./firebase')
-var admin = require("firebase-admin");
-// import express from 'express'
-// import morgan from 'morgan'
-// import { db } from './firebase';
-// const app = express()
+const admin = require("firebase-admin");
 const app = express()
 const cors = require('cors')
 const whitelist = ['http://localhost:3001', 'http://localhost:3000', 'https://attendance-system-blond.vercel.app']
