@@ -36,7 +36,7 @@ app.get('/', async (req, res) => {
 })
 
 app.post('/crear-director', async (req, res) => {
-  res.header('Access-Control-Allow-Origin', '*')
+  res.header('Access-Control-Allow-Origin', whitelist)
   const rta = await auth.createUser({
     uid: req.body.dni,
     email: req.body.email,
