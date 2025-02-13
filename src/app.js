@@ -36,7 +36,7 @@ app.get('/', async (req, res) => {
 })
 
 app.post('/crear-director', async (req, res) => {
-  res.header('Access-Control-Allow-Origin', 'http://localhost:3000' )
+  res.header('Access-Control-Allow-Origin', 'https://eva-rouge-zeta.vercel.app' )
   const rta = await auth.createUser({
     uid: req.body.dni,
     email: req.body.email,
@@ -49,7 +49,7 @@ app.post('/crear-director', async (req, res) => {
 })
 
 app.post('/crear-docente', async (req, res) => {
-  res.header('Access-Control-Allow-Origin', 'http://localhost:3000' )
+  res.header('Access-Control-Allow-Origin', 'https://eva-rouge-zeta.vercel.app' )
   const rta = await auth.createUser({
     uid: req.body.dni,
     email: req.body.email,
