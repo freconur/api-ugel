@@ -3,7 +3,7 @@ const morgan = require('morgan')
 // const admin = require("firebase-admin");
 const { auth, db } = require('./firebase')
 const app = express()
-// const cors = require('cors')
+const cors = require('cors')
 
 const whitelist = ['http://localhost:3001', 'http://localhost:3000', 'https://attendance-system-blond.vercel.app, https://api-ugel-production.up.railway.app']
 const options = {
