@@ -2,7 +2,7 @@ const express = require('express')
 const morgan = require('morgan')
 const admin = require("firebase-admin");
 const app = express()
-const cors = require('cors')
+// const cors = require('cors')
 const whitelist = ['http://localhost:3001', 'http://localhost:3000', 'https://attendance-system-blond.vercel.app, api-ugel-production.up.railway.app']
 const options = {
   origin: (origin, callback) => {
@@ -16,7 +16,7 @@ const options = {
 app.use(morgan('dev'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
-app.use(cors())
+// app.use(cors())
 
 
 app.get('/', async (req, res) => {
@@ -34,6 +34,7 @@ app.get('/', async (req, res) => {
 })
 
 app.post('/crear-director', async (req, res) => {
+  res.header('Access-Control-Allow-Origin', '*')
   const rta = await admin.auth().createUser({
     uid: req.body.dni,
     email: req.body.email,
