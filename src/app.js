@@ -3,7 +3,7 @@ const morgan = require('morgan')
 const admin = require("firebase-admin");
 const app = express()
 const cors = require('cors')
-const whitelist = ['http://localhost:3001', 'http://localhost:3000', 'https://attendance-system-blond.vercel.app']
+const whitelist = ['http://localhost:3001', 'http://localhost:3000', 'https://attendance-system-blond.vercel.app, api-ugel-production.up.railway.app']
 const options = {
   origin: (origin, callback) => {
     if (whitelist.includes(origin) || !origin) {
@@ -16,7 +16,7 @@ const options = {
 app.use(morgan('dev'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
-app.use(cors(options))
+app.use(cors())
 
 
 app.get('/', async (req, res) => {
