@@ -1,14 +1,10 @@
 const express = require('express')
 const morgan = require('morgan')
-var admin = require("firebase-admin");
+// const admin = require("firebase-admin");
+const { auth, db } = require('./firebase')
 const app = express()
 // const cors = require('cors')
-app.use(morgan('dev'))
-app.use(express.json())
-app.use(express.urlencoded({ extended: false }))
-admin.initializeApp({
-  credential: admin.credential.cert(JSON.parse(process.env.FIREBASE_CONFIG)),
-});
+
 const whitelist = ['http://localhost:3001', 'http://localhost:3000', 'https://attendance-system-blond.vercel.app, api-ugel-production.up.railway.app']
 const options = {
   origin: (origin, callback) => {
@@ -19,12 +15,15 @@ const options = {
     }
   }
 }
+app.use(morgan('dev'))
+app.use(express.json())
+app.use(express.urlencoded({ extended: false }))
 // app.use(cors())
 
 
 app.get('/', async (req, res) => {
 
-  const referencia = admin.firestore().collection('usuarios')
+  const referencia = db.collection('usuarios')
 
   const snapshot = await referencia.get();
   const arrayDocumentos = []
@@ -38,7 +37,7 @@ app.get('/', async (req, res) => {
 
 app.post('/crear-director', async (req, res) => {
   res.header('Access-Control-Allow-Origin', '*')
-  const rta = await admin.auth().createUser({
+  const rta = await auth.createUser({
     uid: req.body.dni,
     email: req.body.email,
     password: req.body.password,

@@ -11,7 +11,7 @@ initializeApp({
 const db = getFirestore()
 const auth = getAuth()
 
-module.exports = [db, auth]
+module.exports = { db, auth }
 // var admin = require("firebase-admin");
 
 // // var serviceAccount = require("path/to/serviceAccountKey.json");
