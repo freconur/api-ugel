@@ -1,8 +1,11 @@
 const express = require('express')
 const morgan = require('morgan')
-const admin = require("firebase-admin");
+var admin = require("firebase-admin");
 const app = express()
 // const cors = require('cors')
+admin.initializeApp({
+  credential: admin.credential.cert(JSON.parse(process.env.FIREBASE_CONFIG)),
+});
 const whitelist = ['http://localhost:3001', 'http://localhost:3000', 'https://attendance-system-blond.vercel.app, api-ugel-production.up.railway.app']
 const options = {
   origin: (origin, callback) => {
@@ -42,7 +45,7 @@ app.post('/crear-director', async (req, res) => {
     emailVerified: false,
     disabled: false
   })
-  return res.status(200).json({ ...rta, estado: true })
+  res.json({ ...rta, estado: true })
 
 })
 module.exports = app
