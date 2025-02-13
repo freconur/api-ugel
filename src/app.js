@@ -3,6 +3,9 @@ const morgan = require('morgan')
 var admin = require("firebase-admin");
 const app = express()
 // const cors = require('cors')
+app.use(morgan('dev'))
+app.use(express.json())
+app.use(express.urlencoded({ extended: false }))
 admin.initializeApp({
   credential: admin.credential.cert(JSON.parse(process.env.FIREBASE_CONFIG)),
 });
@@ -16,9 +19,6 @@ const options = {
     }
   }
 }
-app.use(morgan('dev'))
-app.use(express.json())
-app.use(express.urlencoded({ extended: false }))
 // app.use(cors())
 
 
