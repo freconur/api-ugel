@@ -47,4 +47,17 @@ app.post('/crear-director', async (req, res) => {
   res.json({ ...rta, estado: true })
 
 })
+
+app.post('/crear-docente', async (req, res) => {
+  res.header('Access-Control-Allow-Origin', 'http://localhost:3000' )
+  const rta = await auth.createUser({
+    uid: req.body.dni,
+    email: req.body.email,
+    password: req.body.password,
+    emailVerified: false,
+    disabled: false
+  })
+  res.json({ ...rta, estado: true })
+
+})
 module.exports = app
