@@ -37,27 +37,59 @@ app.get('/', async (req, res) => {
 
 app.post('/crear-director', async (req, res) => {
   res.header('Access-Control-Allow-Origin', 'https://eva-rouge-zeta.vercel.app' )
-  const rta = await auth.createUser({
-    uid: req.body.dni,
-    email: req.body.email,
-    password: req.body.password,
-    emailVerified: false,
-    disabled: false
-  })
-  res.json({ ...rta, estado: true })
+  // res.header('Access-Control-Allow-Origin', 'http://localhost:3000')
+
+  const usuarioRef = db.collection('usuarios').doc(`${req.body.dni}`);
+  await usuarioRef.get()
+    .then(async doc => {
+      if (doc.exists === false) {
+        console.log('entroa a no existe')
+        const rta = await auth.createUser({
+          uid: req.body.dni,
+          email: req.body.email,
+          password: req.body.password,
+          emailVerified: false,
+          disabled: false
+        })
+        res.json({ ...rta, estado: true, warning: 'usuario creado con éxito', exists: false })
+      } else if (doc.exists === true) {
+        console.log('entroa a si existe')
+        res.json({ warning: 'usuario ya existe', estado: true, exists: true })
+      }
+    })
+
+
+  // const rta = await auth.createUser({
+  //   uid: req.body.dni,
+  //   email: req.body.email,
+  //   password: req.body.password,
+  //   emailVerified: false,
+  //   disabled: false
+  // })
+  // res.json({ ...rta, estado: true })
 
 })
 
 app.post('/crear-docente', async (req, res) => {
-  res.header('Access-Control-Allow-Origin', 'https://eva-rouge-zeta.vercel.app' )
-  const rta = await auth.createUser({
-    uid: req.body.dni,
-    email: req.body.email,
-    password: req.body.password,
-    emailVerified: false,
-    disabled: false
-  })
-  res.json({ ...rta, estado: true })
+  res.header('Access-Control-Allow-Origin', 'https://eva-rouge-zeta.vercel.app')
+  // res.header('Access-Control-Allow-Origin', 'http://localhost:3000')
+
+  const usuarioRef = db.collection('usuarios').doc(`${req.body.dni}`);
+  await usuarioRef.get()
+    .then(async doc => {
+      if (!doc.exists) {
+        const rta = await auth.createUser({
+          uid: req.body.dni,
+          email: req.body.email,
+          password: req.body.password,
+          emailVerified: false,
+          disabled: false
+        })
+        res.json({ ...rta, estado: true, warning: 'usuario creado con éxito', exists: false  })
+      } else if (doc.exists) {
+        res.json({ warning: 'usuario ya existe', estado: true, exists: true  })
+      }
+    })
 
 })
 module.exports = app
