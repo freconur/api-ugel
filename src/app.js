@@ -96,6 +96,10 @@ app.post('/borrar-usuario', async (req, res) => {
   res.header('Access-Control-Allow-Origin', 'https://eva-rouge-zeta.vercel.app')
   // res.header('Access-Control-Allow-Origin', 'http://localhost:3000')
   const usuarioRef = db.collection('usuarios').doc(`${req.body.dni}`);
+
+
+
+
   await usuarioRef.get()
     .then(async doc => {
       if (!doc.exists) {
@@ -104,7 +108,14 @@ app.post('/borrar-usuario', async (req, res) => {
         await db.collection('usuarios').doc(`${req.body.dni}`).delete()
           .then(rta => {
             console.log('res', rta)
-            res.json({ warning: 'se ha eliminado usuario con exito', estado: true, delete: true })
+            auth.deleteUser(`${req.body.dni}`)
+              .then(() => {
+                console.log('Successfully deleted user');
+                res.json({ warning: 'se ha eliminado usuario con exito', estado: true, delete: true })
+              })
+              .catch((error) => {
+                console.log('Error deleting user:', error);
+              });
           })
       }
     })
