@@ -18,7 +18,10 @@ const options = {
 app.use(morgan('dev'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
-app.use(cors(whitelist))
+app.use(cors({
+  origin: 'https://eva-rouge-zeta.vercel.app', // o http://localhost:3000 en desarrollo
+  credentials: true,
+}))
 
 
 app.get('/', async (req, res) => {
