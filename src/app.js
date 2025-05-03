@@ -5,46 +5,20 @@ const { auth, db } = require('./firebase')
 const app = express()
 const cors = require('cors')
 
-const whitelist = [
-  'http://localhost:3001',
-  'http://localhost:3000',
-  'https://attendance-system-blond.vercel.app',
-  'https://api-ugel-production.up.railway.app',
-  'https://eva-rouge-zeta.vercel.app',
-  'https://api-ugel.railway.app'
-]
-
-const corsOptions = {
+const whitelist = ['http://localhost:3001', 'http://localhost:3000', 'https://attendance-system-blond.vercel.app, https://api-ugel-production.up.railway.app']
+const options = {
   origin: (origin, callback) => {
-    if (!origin) return callback(null, true)
-    
-    if (whitelist.includes(origin)) {
-      return callback(null, true)
+    if (whitelist.includes(origin) || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('no permitido'));
     }
-
-    if (origin.includes('railway.app')) {
-      return callback(null, true)
-    }
-
-    callback(new Error('No permitido por CORS'))
-  },
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
-  credentials: true,
-  preflightContinue: false,
-  optionsSuccessStatus: 204
+  }
 }
-
-app.use((req, res, next) => {
-  console.log('Origin:', req.headers.origin)
-  console.log('Method:', req.method)
-  next()
-})
-
 app.use(morgan('dev'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
-app.use(cors(corsOptions))
+app.use(cors(whitelist))
 
 
 app.get('/', async (req, res) => {
@@ -119,7 +93,12 @@ app.post('/crear-docente', async (req, res) => {
 
 })
 app.post('/borrar-usuario', async (req, res) => {
-  const usuarioRef = db.collection('usuarios').doc(`${req.body.dni}`)
+  res.header('Access-Control-Allow-Origin', 'https://eva-rouge-zeta.vercel.app')
+  // res.header('Access-Control-Allow-Origin', 'http://localhost:3000')
+  const usuarioRef = db.collection('usuarios').doc(`${req.body.dni}`);
+
+
+
 
   await usuarioRef.get()
     .then(async doc => {
@@ -131,19 +110,15 @@ app.post('/borrar-usuario', async (req, res) => {
             console.log('res', rta)
             auth.deleteUser(`${req.body.dni}`)
               .then(() => {
-                console.log('Successfully deleted user')
+                console.log('Successfully deleted user');
                 res.json({ warning: 'se ha eliminado usuario con exito', estado: true, delete: true })
               })
               .catch((error) => {
-                console.log('Error deleting user:', error)
-                res.status(500).json({ error: 'Error al eliminar usuario' })
-              })
+                console.log('Error deleting user:', error);
+              });
           })
       }
     })
-    .catch(error => {
-      console.error('Error:', error)
-      res.status(500).json({ error: 'Error en el proceso de eliminación' })
-    })
+
 })
 module.exports = app
