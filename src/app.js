@@ -10,21 +10,36 @@ const whitelist = [
   'http://localhost:3000',
   'https://attendance-system-blond.vercel.app',
   'https://api-ugel-production.up.railway.app',
-  'https://eva-rouge-zeta.vercel.app'
+  'https://eva-rouge-zeta.vercel.app',
+  'https://api-ugel.railway.app'
 ]
 
 const corsOptions = {
   origin: (origin, callback) => {
-    if (whitelist.includes(origin) || !origin) {
-      callback(null, true)
-    } else {
-      callback(new Error('No permitido por CORS'))
+    if (!origin) return callback(null, true)
+    
+    if (whitelist.includes(origin)) {
+      return callback(null, true)
     }
+
+    if (origin.includes('railway.app')) {
+      return callback(null, true)
+    }
+
+    callback(new Error('No permitido por CORS'))
   },
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  credentials: true,
+  preflightContinue: false,
+  optionsSuccessStatus: 204
 }
+
+app.use((req, res, next) => {
+  console.log('Origin:', req.headers.origin)
+  console.log('Method:', req.method)
+  next()
+})
 
 app.use(morgan('dev'))
 app.use(express.json())
